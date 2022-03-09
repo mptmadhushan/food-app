@@ -5,7 +5,7 @@ let APIKit = axios.create({
   timeout: 10000,
   headers: {
     Authorization:
-      'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NDMzMDk4LCJqdGkiOiIyNDAxMjgzNTNiMzA0ZDYxYjBhNTg3YzJkMDM5YzRhZiIsInVzZXJfaWQiOjJ9.OGppE4MSoSGF72Clzgv7K_rF0hs9otUKGhbc5nIVfdk',
+      'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ3MDIwNDY4LCJqdGkiOiIxOTI5YzNhMDcwOTQ0ODk5OThjYmQ4YjMxN2YzNDEwYiIsInVzZXJfaWQiOjJ9.M37R02KfQXti0EYDHOCm-WaZ5ABdQMjBMu7r-ckV7fQ',
     'Content-Type': 'application/json',
   },
 });
