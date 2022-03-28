@@ -15,7 +15,7 @@ function MainStackNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="OnBoard"
         screenOptions={{
           headerShown: TapGestureHandler,
         }}>
