@@ -7,7 +7,7 @@ let APIKit = axios.create({
 });
 
 APIKit.interceptors.response.use(function (response) {
-  return response.data;
+  return response;
 });
 
 export const setClientToken = token => {
