@@ -34,6 +34,7 @@ export default function Chat() {
       const packageName = JSON.parse(jsonValue);
       console.log('token ❓', packageName.refresh);
       setUser(packageName);
+      setClientToken(packageName.access);
     } catch (e) {
       console.log('ee', e);
     }

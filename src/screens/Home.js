@@ -18,18 +18,18 @@ export default function Home({navigation, route}) {
   // const name = email.split('@')[0];
   const [user, setUser] = useState();
   useEffect(() => {
-    getUserData();
+    // getUserData();
   }, []);
-  const getUserData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('@storage_Key');
-      const packageName = JSON.parse(jsonValue);
-      console.log('token ❓', packageName.refresh);
-      setUser(packageName);
-    } catch (e) {
-      console.log('ee', e);
-    }
-  };
+  // const getUserData = async () => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem('@storage_Key');
+  //     const packageName = JSON.parse(jsonValue);
+  //     console.log('token ❓', packageName.refresh);
+  //     setUser(packageName);
+  //   } catch (e) {
+  //     console.log('ee', e);
+  //   }
+  // };
   return (
     <ImageBackground
       style={styles.container}
