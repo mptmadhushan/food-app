@@ -5,7 +5,10 @@ let APIKit = axios.create({
   baseURL: 'https://restaurant-ml-app.herokuapp.com/api/v1.0/',
   timeout: 10000,
 });
-
+APIKit.interceptors.request.use(request => {
+  console.log('Starting Request', JSON.stringify(request, null, 2));
+  return request;
+});
 APIKit.interceptors.response.use(function (response) {
   return response;
 });

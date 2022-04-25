@@ -1,10 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {
   View,
   TextInput,
   Text,
   Button,
+  ScrollView,
   StyleSheet,
+  Image,
   TouchableOpacity,
 } from 'react-native';
 import {SIZES, COLORS, FONTS} from '../helpers';
@@ -14,10 +17,23 @@ import Toast from 'react-native-simple-toast';
 import APIKit, {setClientToken} from '../helpers/apiKit';
 import DatePicker from 'react-native-date-picker';
 
+const SquareView = color => {
+  return (
+    <View
+      style={{
+        height: 200,
+        width: 200,
+        backgroundColor: color,
+      }}
+    />
+  );
+};
+
 export default function Chat() {
   const [user, setUser] = useState('');
   const [message, setMessage] = useState('');
   const [userMenu, setMenu] = useState(false);
+  const [orderCustomize, setOrderCustomize] = useState(false);
   const [userTable, setTable] = useState(false);
   const [botMessage, setBotMessage] = useState('');
 
@@ -60,6 +76,12 @@ export default function Chat() {
       if (data.tag === 'table_reservation') {
         setTable(true);
       }
+      if (data.tag === 'order_customization' || data.tag === 'order') {
+        setOrderCustomize(true);
+      }
+      // if (data.tag !== 'order' || data.tag !== 'order_customization') {
+      //   setOrderCustomize(false);
+      // }
     };
 
     const onFailure = error => {
@@ -114,6 +136,51 @@ export default function Chat() {
     // setLoading(true);
 
     APIKit.post('/order/', payload).then(onSuccess).catch(onFailure);
+  };
+  const orderCust = newData => {
+    setOrderCustomize(false);
+    const food_id = newData.id;
+    const customization = 'Extra Spicy';
+    const payload = {
+      customization: 'Extra Spicy',
+    };
+    console.log('send data', payload);
+    console.log('send data', botMessage.tag);
+
+    const onSuccess = () => {
+      console.log('success 🏀🏀');
+      const data = {response: 'order customized!'};
+      console.log('response da💁', data);
+      setBotMessage(data);
+    };
+
+    const onFailure = error => {
+      console.log('fail 🏀🏀', error);
+
+      if (error.response) {
+        console.log(error);
+        Toast.showWithGravity(
+          error.response.data.message,
+          Toast.LONG,
+          Toast.TOP,
+        );
+
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+      // this.setState({errors: error.response.data, isLoading: false});
+    };
+
+    // Show spinner when call is made
+    // setLoading(true);
+    if (botMessage.tag === 'order_customization') {
+      APIKit.post('/order-customization/2/', payload)
+        .then(onSuccess)
+        .catch(onFailure);
+    } else {
+      console.log('order');
+      setBotMessage('');
+    }
   };
   const makeReservation = newData => {
     setTable(false);
@@ -176,6 +243,22 @@ export default function Chat() {
               </View>
             </View>
           )}
+          {message !== '' && orderCustomize && (
+            <View style={styles.rowFlexUser}>
+              <View style={styles.userChat}>
+                <Text style={styles.text002}>
+                  order type :{botMessage.data.order_type || ''}
+                </Text>
+              </View>
+              <View style={styles.avatarUser}>
+                <Icon
+                  name="ios-person-circle-outline"
+                  size={25}
+                  color={COLORS.black}
+                />
+              </View>
+            </View>
+          )}
           {botMessage.response !== '' && (
             <View style={styles.rowFlex}>
               <View style={styles.avatar}>
@@ -188,20 +271,40 @@ export default function Chat() {
               </View>
             </View>
           )}
+          {botMessage.response === "Here's your order details" && (
+            <View style={styles.rowFlex}>
+              <View style={styles.avatar}>
+                <Icon name="logo-ionitron" size={25} color={COLORS.black} />
+              </View>
+              <View style={styles.bot}>
+                <Text style={styles.text001}>{botMessage.data.order_type}</Text>
+              </View>
+            </View>
+          )}
           {userMenu && (
-            <View style={styles.rowFlexMenu}>
+            <ScrollView horizontal={true}>
               {botMessage.data?.map((newData, index) => (
                 <View
                   key={index}
                   style={{
                     flex: 1,
-                    width: SIZES.width * 0.2,
-                    height: SIZES.width * 0.3,
+                    // width: SIZES.width * 0.2,
+                    // height: SIZES.width * 0.3,
                   }}>
                   <TouchableOpacity
                     onPress={() => selectMenu(newData)}
                     key={index}
                     style={styles.menuBtn}>
+                    <Image
+                      source={{
+                        uri: newData.image,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        width: SIZES.width * 0.3,
+                        height: SIZES.width * 0.3,
+                      }}
+                    />
                     <Text style={styles.text001}>{newData.name}</Text>
                     <Text style={styles.text001}>Price: {newData.price}</Text>
                     <Text style={styles.text001}>
@@ -210,7 +313,45 @@ export default function Chat() {
                   </TouchableOpacity>
                 </View>
               ))}
-            </View>
+            </ScrollView>
+          )}
+          {orderCustomize && (
+            <ScrollView horizontal={true}>
+              {botMessage.data?.ordered_food?.map((newData, index) => (
+                <View
+                  key={index}
+                  style={{
+                    flex: 1,
+                    // width: SIZES.width * 0.3,
+                    // height: SIZES.height * 0.5,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => orderCust(newData)}
+                    disabled={
+                      botMessage.data.response === "Here's your order details'"
+                    }
+                    key={index}
+                    style={styles.menuBtn}>
+                    <Image
+                      source={{
+                        uri: newData.image,
+                      }}
+                      resizeMode="contain"
+                      style={{
+                        width: SIZES.width * 0.3,
+                        height: SIZES.height * 0.3,
+                      }}
+                    />
+
+                    <Text style={styles.text001}>{newData.name}</Text>
+                    <Text style={styles.text001}>Price: {newData.price}</Text>
+                    <Text style={styles.text001}>
+                      Discount: {newData.discount}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
           )}
           {userTable && (
             <View>
@@ -374,6 +515,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
+    flexWrap: 'wrap',
+    display: 'flex',
   },
   rowFlexUser: {
     flexDirection: 'row',
@@ -414,12 +557,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 5,
-    margin: 5,
-
-    flex: 1,
-    maxWidth: SIZES.width * 0.3,
-    height: 40,
+    padding: 3,
+    margin: 2,
+    // flex: 1,
+    maxWidth: SIZES.width * 0.4,
   },
   bottom: {
     flex: 1,
