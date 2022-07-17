@@ -3,6 +3,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  View,
+  Image,
   ImageBackground,
 } from 'react-native';
 import {icons, images, SIZES, COLORS, FONTS} from '../helpers';
@@ -14,10 +16,21 @@ export default function OnBoard({navigation}) {
       style={styles.container}
       source={require('../assets/foodbg.jpeg')}>
       <LinearGradient colors={['transparent', 'white']} style={styles.overlay}>
-        <Text style={styles.title2}>Live, love, eat.</Text>
+        <View style={styles.centerFlex}>
+          <Image
+            source={images.logo}
+            resizeMode="contain"
+            style={{
+              width: SIZES.width * 0.3,
+              height: SIZES.width * 0.3,
+            }}
+          />
+        </View>
+
         <Text style={styles.title}>
-          Good food never fail in bringing people together.
+          Welcome{'\n'} To{'\n'}Perch
         </Text>
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('LogIn');
@@ -41,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btn: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.black,
     height: 40,
     width: 100,
     borderRadius: 10,
@@ -61,13 +74,13 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   title: {
-    color: COLORS.black,
-    fontSize: 20,
+    color: COLORS.primary,
+    fontSize: 40,
     textAlign: 'center',
     paddingHorizontal: 20,
   },
   title2: {
-    marginTop: SIZES.height * 0.3,
+    marginTop: SIZES.height * 0.1,
     color: COLORS.black,
     fontWeight: 'bold',
     fontSize: 30,
