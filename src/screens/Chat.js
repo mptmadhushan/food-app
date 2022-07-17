@@ -16,6 +16,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
 import APIKit, {setClientToken} from '../helpers/apiKit';
 import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
+import OpenApplication from 'react-native-open-application';
 
 const SquareView = color => {
   return (
@@ -35,11 +37,14 @@ export default function Chat() {
   const [userMenu, setMenu] = useState(false);
   const [orderCustomize, setOrderCustomize] = useState(false);
   const [userTable, setTable] = useState(false);
+  const [customizeHistory, setCustomizeHistory] = useState(false);
   const [botMessage, setBotMessage] = useState('');
+  const [date1, setDate1] = useState(new Date());
+  const [date2, setDate2] = useState(new Date());
 
-  const [date, setDate] = useState(new Date());
   const [attendance, setAttendance] = useState();
-  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
 
   useEffect(() => {
     getUserData();
@@ -137,17 +142,54 @@ export default function Chat() {
 
     APIKit.post('/order/', payload).then(onSuccess).catch(onFailure);
   };
-  const orderCust = newData => {
-    setOrderCustomize(false);
-    const food_id = newData.id;
-    const customization = 'Extra Spicy';
+  const orderCustSelect = newData => {
+    console.log('🚀 ~ newData', newData.id);
+    const onSuccess = ({data}) => {
+      console.log('success 🏀🏀');
+      console.log('response da💁', data);
+      setBotMessage(data);
+      if (data.tag === 'customization_history') {
+        setCustomizeHistory(true);
+      }
+    };
+
+    const onFailure = error => {
+      console.log('fail 🏀🏀', error);
+
+      if (error.response) {
+        console.log(error);
+        Toast.showWithGravity(
+          error.response.data.message,
+          Toast.LONG,
+          Toast.TOP,
+        );
+
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    };
+
+    APIKit.get(`/order-customization/${newData.id}/`)
+      .then(onSuccess)
+      .catch(onFailure);
+    console.log('order');
+    setBotMessage('Please Select type');
+  };
+  const orderCust = (newData, botMessage) => {
+    console.log(
+      'send data',
+      botMessage.data.ordered_customized_foods[0].customization.food,
+    );
+    const food_id =
+      botMessage.data.ordered_customized_foods[0].customization.food;
+    const customization = newData;
     const payload = {
-      customization: 'Extra Spicy',
+      customization: customization,
     };
     console.log('send data', payload);
-    console.log('send data', botMessage.tag);
 
     const onSuccess = () => {
+      setCustomizeHistory(false);
       console.log('success 🏀🏀');
       const data = {response: 'order customized!'};
       console.log('response da💁', data);
@@ -173,23 +215,23 @@ export default function Chat() {
 
     // Show spinner when call is made
     // setLoading(true);
-    if (botMessage.tag === 'order_customization') {
-      APIKit.post('/order-customization/2/', payload)
-        .then(onSuccess)
-        .catch(onFailure);
-    } else {
-      console.log('order');
-      setBotMessage('');
-    }
+    // if (botMessage.tag === 'order_customization') {
+    APIKit.post(`/order-customization/${food_id}/`, payload)
+      .then(onSuccess)
+      .catch(onFailure);
+    // } else {
+    //   console.log('order');
+    //   setBotMessage('');
+    // }
   };
   const makeReservation = newData => {
     setTable(false);
-    const num_of_attendees = attendance;
-    const check_in = 'Dec 15 2021  9:00PM';
-    const check_out = 'Dec 15 2021  10:30PM';
+    const num_of_attendees = parseInt(attendance);
+    const check_in = moment(date1).format('MMM DD YYYY hh:mma');
+    const check_out = moment(date2).format('MMM DD YYYY hh:mma');
     const payload = {num_of_attendees, check_in, check_out};
     console.log('send data', payload);
-
+    console.log(moment(check_in).format('DD MMM YYYY, hh:mm a'));
     const onSuccess = ({data}) => {
       console.log('response da💁', data);
       setBotMessage(data);
@@ -247,7 +289,7 @@ export default function Chat() {
             <View style={styles.rowFlexUser}>
               <View style={styles.userChat}>
                 <Text style={styles.text002}>
-                  order type :{botMessage.data.order_type || ''}
+                  {botMessage.data?.order_type || ''}
                 </Text>
               </View>
               <View style={styles.avatarUser}>
@@ -268,6 +310,45 @@ export default function Chat() {
                 <Text style={styles.text001}>
                   {botMessage.response || 'Hi..'}
                 </Text>
+                {botMessage.tag ==='reservation_status'&& <Text style={styles.text001}>
+                check in  {moment(botMessage.data.check_in).format('MMM DD YYYY hh:mm a') || 'Hi..'}
+                </Text>}
+                {botMessage.tag ==='reservation_status'&& <Text style={styles.text001}>
+                 check out {moment(botMessage.data.check_out).format('MMM DD YYYY hh:mm a')  || 'Hi..'}
+                </Text>}
+                {botMessage.tag ==='reservation_status'&& <Text style={styles.text001}>
+                table {botMessage.data.table || 'Hi..'}
+                </Text>}
+              </View>
+            </View>
+          )}
+          {customizeHistory && (
+            <View style={styles.rowFlex}>
+              <View style={styles.avatar}>
+                <Icon name="logo-ionitron" size={25} color={COLORS.black} />
+              </View>
+              <View style={styles.bot}>
+                <Text style={styles.text001}>{botMessage.data.response}</Text>
+                <ScrollView horizontal={true}>
+                  {botMessage.data?.possible_customizations?.map(
+                    (newData, index) => (
+                      <View
+                        key={index}
+                        style={{
+                          flex: 1,
+                          // width: SIZES.width * 0.3,
+                          // height: SIZES.height * 0.5,
+                        }}>
+                        <TouchableOpacity
+                          onPress={() => orderCust(newData, botMessage)}
+                          key={index}
+                          style={styles.menuBtn}>
+                          <Text style={styles.text001}>{newData}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ),
+                  )}
+                </ScrollView>
               </View>
             </View>
           )}
@@ -277,12 +358,25 @@ export default function Chat() {
                 <Icon name="logo-ionitron" size={25} color={COLORS.black} />
               </View>
               <View style={styles.bot}>
-                <Text style={styles.text001}>{botMessage.data.order_type}</Text>
+                <Text style={styles.text001}>
+                  {botMessage.data?.order_type}
+                </Text>
               </View>
             </View>
           )}
           {userMenu && (
-            <ScrollView horizontal={true}>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              decelerationRate={0}
+              snapToInterval={SIZES.width * 0.8 + 25}
+              snapToAlignment="center"
+              contentInset={{
+                top: 0,
+                left: 20,
+                bottom: 0,
+                right: 20,
+              }}>
               {botMessage.data?.map((newData, index) => (
                 <View
                   key={index}
@@ -326,7 +420,7 @@ export default function Chat() {
                     // height: SIZES.height * 0.5,
                   }}>
                   <TouchableOpacity
-                    onPress={() => orderCust(newData)}
+                    onPress={() => orderCustSelect(newData)}
                     disabled={
                       botMessage.data.response === "Here's your order details'"
                     }
@@ -357,17 +451,17 @@ export default function Chat() {
             <View>
               <View style={styles.rowFlexMenu}>
                 <View>
-                  <Button title="Check-In" onPress={() => setOpen(true)} />
+                  <Button title="Check-In" onPress={() => setOpen1(true)} />
                   <DatePicker
                     modal
-                    open={open}
-                    date={date}
-                    onConfirm={date => {
-                      setOpen(false);
-                      setDate(date);
+                    open={open1}
+                    date={date1}
+                    onConfirm={date1 => {
+                      setOpen1(false);
+                      setDate1(date1);
                     }}
                     onCancel={() => {
-                      setOpen(false);
+                      setOpen1(false);
                     }}
                   />
                 </View>
@@ -384,17 +478,17 @@ export default function Chat() {
                   />
                 </View>
                 <View>
-                  <Button title="Check-Out" onPress={() => setOpen(true)} />
+                  <Button title="Check-Out" onPress={() => setOpen2(true)} />
                   <DatePicker
                     modal
-                    open={open}
-                    date={date}
-                    onConfirm={date => {
-                      setOpen(false);
-                      setDate(date);
+                    open={open2}
+                    date={date2}
+                    onConfirm={date2 => {
+                      setOpen2(false);
+                      setDate2(date2);
                     }}
                     onCancel={() => {
-                      setOpen(false);
+                      setOpen2(false);
                     }}
                   />
                 </View>

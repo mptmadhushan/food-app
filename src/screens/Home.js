@@ -11,7 +11,7 @@ import {SIZES, COLORS, FONTS} from '../helpers';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import OpenApplication from 'react-native-open-application';
 export default function Home({navigation, route}) {
   // const response = route.params.response;
   // const email = response?.user.email;
@@ -47,7 +47,11 @@ export default function Home({navigation, route}) {
 
         {/* <View style={styles.rowNorm}> */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('Instruction')}
+          onPress={() =>
+            OpenApplication.openApplication(
+              'com.google.ar.core.examples.java.helloar',
+            )
+          }
           style={styles.slide1}>
           <View style={styles.centerFlex}>
             <Icon

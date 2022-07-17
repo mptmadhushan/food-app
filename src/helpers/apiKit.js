@@ -6,7 +6,7 @@ let APIKit = axios.create({
   timeout: 10000,
 });
 APIKit.interceptors.request.use(request => {
-  console.log('Starting Request', JSON.stringify(request, null, 2));
+  // console.log('Starting Request', JSON.stringify(request, null, 2));
   return request;
 });
 APIKit.interceptors.response.use(function (response) {
