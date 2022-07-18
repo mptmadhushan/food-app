@@ -20,6 +20,8 @@ import {
 } from 'react-native';
 import {icons, images, SIZES, COLORS, FONTS} from '../helpers';
 import auth from '@react-native-firebase/auth';
+import LinearGradient from 'react-native-linear-gradient';
+
 const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,7 +81,7 @@ const RegisterScreen = ({navigation}) => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <View style={styles.centerFlex}>
             <Image
-              source={images.logo}
+              source={images.logo1}
               resizeMode="contain"
               style={{
                 width: SIZES.width * 0.3,
@@ -137,11 +139,14 @@ const RegisterScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => __doSignUp()}>
-              <Text style={styles.buttonTextStyle}>Register</Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => __doSignUp()}>
+              <LinearGradient
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                colors={['#43EA82', '#158A79']}
+                style={styles.buttonStyle}>
+                <Text style={styles.buttonTextStyle}>Register</Text>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

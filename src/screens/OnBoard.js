@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlay: {
-    marginTop: SIZES.height * 0.4,
+    marginTop: SIZES.height * 0.3,
     // backgroundColor: 'rgba(255,0,0,0.5)',
-    height: SIZES.height * 0.6,
+    height: SIZES.height * 0.7,
     // alignItems: 'center',
   },
   btn: {
@@ -82,14 +82,14 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.white,
-    fontSize: 60,
+    fontSize: 50,
     textAlign: 'left',
     fontWeight: 'bold',
     paddingHorizontal: 20,
   },
   titlec: {
     color: COLORS.primary,
-    fontSize: 60,
+    fontSize: 50,
     textAlign: 'left',
     fontWeight: 'bold',
     paddingHorizontal: 20,
