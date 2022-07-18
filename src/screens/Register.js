@@ -94,7 +94,7 @@ const RegisterScreen = ({navigation}) => {
                 label={'Email'}
                 keyboardType="email-address"
                 style={[isValid ? styles.inputStyleError : styles.inputStyle]}
-                placeholder="Mail address"
+                placeholder="User Name"
                 placeholderTextColor={COLORS.white}
                 onChangeText={text => {
                   setError;

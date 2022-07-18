@@ -84,9 +84,6 @@ export default function Chat() {
       if (data.tag === 'order_customization' || data.tag === 'order') {
         setOrderCustomize(true);
       }
-      // if (data.tag !== 'order' || data.tag !== 'order_customization') {
-      //   setOrderCustomize(false);
-      // }
     };
 
     const onFailure = error => {
@@ -105,8 +102,7 @@ export default function Chat() {
       // this.setState({errors: error.response.data, isLoading: false});
     };
 
-    // Show spinner when call is made
-    // setLoading(true);
+
 
     APIKit.post('/bot/', payload).then(onSuccess).catch(onFailure);
   };
@@ -515,8 +511,8 @@ export default function Chat() {
           </View>
           <TouchableOpacity onPress={() => onPressSend()} style={styles.slide1}>
             <View style={styles.rowFlex}>
-              <Text style={styles.text001}>send</Text>
-              <Icon name="ios-send" size={10} color={COLORS.white} />
+              <Text style={styles.text001}>Send</Text>
+              <Icon name="ios-send" size={10} color={COLORS.black} />
             </View>
           </TouchableOpacity>
         </View>
@@ -619,7 +615,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   text001: {
-    color: COLORS.white,
+    color: COLORS.black,
     marginRight: 16,
     fontSize: 15,
   },

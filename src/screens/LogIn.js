@@ -21,7 +21,7 @@ import {
 import Toast from 'react-native-simple-toast';
 import {images, SIZES, COLORS, FONTS} from '../helpers';
 import APIKit from '../helpers/apiKit';
-
+import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
 const LoginScreen = ({navigation}) => {
   useEffect(() => {});
@@ -160,10 +160,15 @@ const LoginScreen = ({navigation}) => {
             </View>
 
             <TouchableOpacity
-              style={styles.buttonStyle}
               activeOpacity={0.5}
               onPress={() => onPressLogin()}>
-              <Text style={styles.buttonTextStyle}>LogIn</Text>
+              <LinearGradient
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                colors={['#43EA82', '#158A79']}
+                style={styles.buttonStyle}>
+                <Text style={styles.buttonTextStyle}>LogIn</Text>
+              </LinearGradient>
             </TouchableOpacity>
             {/* <Button
               title="Google Sign-In"
@@ -225,13 +230,12 @@ const styles = StyleSheet.create({
     height: 40,
     width: 130,
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 20,
     justifyContent: 'center',
   },
   buttonTextStyle: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
   },
   inputStyle: {
     borderWidth: 1,

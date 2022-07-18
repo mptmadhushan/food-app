@@ -27,17 +27,24 @@ export default function OnBoard({navigation}) {
           />
         </View>
 
-        <Text style={styles.title}>
-          Welcome{'\n'} To{'\n'}Perch
-        </Text>
+        <Text style={styles.title}>Welcome{'\n'}To</Text>
+        <Text style={styles.titlec}>Perch.</Text>
 
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('LogIn');
-          }}
-          style={styles.btn}>
-          <Text style={styles.btnText}>Let's Start</Text>
-        </TouchableOpacity>
+        {/* <Text style={styles.title}>Perch.</Text> */}
+        <View style={styles.centerFlex}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('LogIn');
+            }}>
+            <LinearGradient
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#43EA82', '#158A79']}
+              style={styles.btn}>
+              <Text style={styles.btnText}>Let's Start</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
       </LinearGradient>
     </ImageBackground>
   );
@@ -51,13 +58,13 @@ const styles = StyleSheet.create({
     marginTop: SIZES.height * 0.4,
     // backgroundColor: 'rgba(255,0,0,0.5)',
     height: SIZES.height * 0.6,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   btn: {
     backgroundColor: COLORS.black,
     height: 40,
     width: 100,
-    borderRadius: 10,
+    borderRadius: 20,
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,10 +81,23 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   title: {
-    color: COLORS.primary,
-    fontSize: 40,
-    textAlign: 'center',
+    color: COLORS.white,
+    fontSize: 60,
+    textAlign: 'left',
+    fontWeight: 'bold',
     paddingHorizontal: 20,
+  },
+  titlec: {
+    color: COLORS.primary,
+    fontSize: 60,
+    textAlign: 'left',
+    fontWeight: 'bold',
+    paddingHorizontal: 20,
+  },
+  centerFlex: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
   },
   title2: {
     marginTop: SIZES.height * 0.1,

@@ -51,24 +51,33 @@ export default function Home({navigation, route}) {
             OpenApplication.openApplication(
               'com.google.ar.core.examples.java.helloar',
             )
-          }
-          style={styles.slide1}>
-          <View style={styles.centerFlex}>
-            <Icon
-              name="ios-information-circle-outline"
-              size={50}
-              color={COLORS.white}
-            />
-            <Text style={styles.text001}>Instructions</Text>
-          </View>
+          }>
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.slide1}
+            colors={['#43EA82', '#158A79']}>
+            <View style={styles.centerFlex}>
+              <Icon
+                name="ios-information-circle-outline"
+                size={50}
+                color={COLORS.white}
+              />
+              <Text style={styles.text001}>Menu</Text>
+            </View>
+          </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Chat')}
-          style={styles.slide1}>
-          <View style={styles.centerFlex}>
-            <Icon name="chatbubbles-outline" size={50} color={COLORS.white} />
-            <Text style={styles.text001}>Chat Bot</Text>
-          </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={styles.slide1}
+            colors={['#43EA82', '#158A79']}>
+            <View style={styles.centerFlex}>
+              <Icon name="chatbubbles-outline" size={50} color={COLORS.white} />
+              <Text style={styles.text001}>Chat Bot</Text>
+            </View>
+          </LinearGradient>
         </TouchableOpacity>
         {/* </View> */}
       </LinearGradient>
