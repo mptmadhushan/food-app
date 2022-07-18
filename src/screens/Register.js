@@ -81,7 +81,7 @@ const RegisterScreen = ({navigation}) => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <View style={styles.centerFlex}>
             <Image
-              source={images.logo1}
+              source={images.logo}
               resizeMode="contain"
               style={{
                 width: SIZES.width * 0.3,
